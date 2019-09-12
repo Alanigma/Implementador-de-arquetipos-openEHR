@@ -6,6 +6,8 @@ arquivo.close()
 arquivoOrdem = open('ordem.txt','w')
 arquivoOrdem.close()
 maior = int(input("Qual é o maior at? Exemplo: se for at0050, digite 50:"))
+tamanho = int(input("Tamanho do título principal (quanto maior o valor, menor o tamanho): "))
+tamanhoDaqui = 3
 bugados = []
 
 while True:
@@ -131,6 +133,7 @@ arquivoHTML.close()
 
 sectionOn=[0]
 entrada=0
+primeiraSection = 0
 
 arquivoHTML = open('index.html','a')
 arquivoHTML.write('<!DOCTYPE html>\n<html>\n<head>\n<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/form.css"/>\n</head>\n<body>\n<div class="container">\n<form class="ui form ui grid">\n')
@@ -141,22 +144,46 @@ for c in range(0, len(tipo2)):
         while len(sectionOn) > 1:
             arquivoHTML.write('</fieldset>\n')
             del sectionOn[len(sectionOn) - 1]
-        arquivoHTML.write(f'<h1>\n{texto2[c]}</h1>\n')
+        arquivoHTML.write(f'<h{tamanho}>\n{texto2[c]}</h1>\n')
 
     if tipo2[c] == "SECTION\n":
-        if espacos2[c] > sectionOn[len(sectionOn) - 1]:
+        if sectionOn[len(sectionOn) - 1] == 0:
+            tamanhoDaqui = len(sectionOn) + tamanho
+            primeiraSection = espacos2[c]
+            arquivoHTML.write(f'<fieldset class="field four wide column">\n<legend>\n<h{tamanhoDaqui}>\n{texto2[c]}</h{tamanhoDaqui}>\n</legend>\n')
             sectionOn.append(espacos2[c])
-            arquivoHTML.write(f'<fieldset>\n<legend>\n<h{len(sectionOn)}>\n{texto2[c]}</h{len(sectionOn)}>\n</legend>\n')
+        elif espacos2[c]==primeiraSection:
+            while espacos2[c] < sectionOn[len(sectionOn) - 1]:
+                arquivoHTML.write(f'</fieldset>\n')
+                del sectionOn[len(sectionOn) - 1]
+            if espacos2[c] == sectionOn[len(sectionOn) - 1]:
+                tamanhoDaqui = len(sectionOn) + tamanho - 1
+                arquivoHTML.write(f'</fieldset>\n<fieldset class="field four wide column">\n<legend>\n<h{tamanhoDaqui}>\n{texto2[c]}</h{tamanhoDaqui}>\n</legend>\n')
+        elif espacos2[c]<primeiraSection:
+            primeiraSection = espacos2[c]
+            while espacos2[c] < sectionOn[len(sectionOn) - 1]:
+                arquivoHTML.write(f'</fieldset>\n')
+                del sectionOn[len(sectionOn) - 1]
+            if sectionOn[len(sectionOn) - 1] == 0:
+                tamanhoDaqui = len(sectionOn) + tamanho
+                arquivoHTML.write(f'</fieldset>\n<fieldset class="field four wide column">\n<legend>\n<h{tamanhoDaqui}>\n{texto2[c]}</h{tamanhoDaqui}>\n</legend>\n')
+                sectionOn.append(espacos2[c])
+        elif espacos2[c] > sectionOn[len(sectionOn) - 1]:
+            tamanhoDaqui = len(sectionOn) + tamanho
+            arquivoHTML.write(f'<fieldset>\n<legend>\n<h{tamanhoDaqui}>\n{texto2[c]}</h{tamanhoDaqui}>\n</legend>\n')
+            sectionOn.append(espacos2[c])
         elif espacos2[c] == sectionOn[len(sectionOn) - 1]:
-            arquivoHTML.write(f'</fieldset>\n<fieldset>\n<legend>\n<h{len(sectionOn)}>\n{texto2[c]}</h{len(sectionOn)}>\n</legend>\n')
+            tamanhoDaqui = len(sectionOn) + tamanho-1
+            arquivoHTML.write(f'</fieldset>\n<fieldset>\n<legend>\n<h{tamanhoDaqui}>\n{texto2[c]}</h{tamanhoDaqui}>\n</legend>\n')
         while espacos2[c] < sectionOn[len(sectionOn) - 1]:
             arquivoHTML.write(f'</fieldset>\n')
             del sectionOn[len(sectionOn)-1]
             if espacos2[c] == sectionOn[len(sectionOn) - 1]:
-                arquivoHTML.write(f'</fieldset>\n<fieldset>\n<legend>\n<h{len(sectionOn)}>\n{texto2[c]}</h{len(sectionOn)}>\n</legend>\n')
+                tamanhoDaqui = len(sectionOn) + tamanho - 1
+                arquivoHTML.write(f'</fieldset>\n<fieldset>\n<legend>\n<h{tamanhoDaqui}>\n{texto2[c]}</h{tamanhoDaqui}>\n</legend>\n')
 
     if tipo2[c] == "ELEMENT\n":
-        arquivoHTML.write(f'<div class="field four wide column">\n<label for="entrada{entrada}">\n{texto2[c]}</label>\n')
+        arquivoHTML.write(f'<div class="field fifteen wide column">\n<label for="entrada{entrada}"><h{tamanhoDaqui+1}>\n{texto2[c]}</h{tamanhoDaqui+1}></label>\n')
         for q in range(0, len(tipo2)):
             if tipo2[q] == "DV_TEXT\n":
                 arquivoHTML.write(f'<textarea type="text" name="entrada{entrada}" id="entrada{entrada}"></textarea>\n</div>\n')
@@ -211,5 +238,5 @@ for c in range(0, len(tipo2)):
 while len(sectionOn) > 1:
     arquivoHTML.write('</fieldset>\n')
     del sectionOn[len(sectionOn)-1]
-arquivoHTML.write('</form>\n</div>\n</body>\n</html>')
+arquivoHTML.write('<button class="ui button" type="submit">Enviar</button>\n</form>\n</div>\n</body>\n</html>')
 arquivoHTML.close()
