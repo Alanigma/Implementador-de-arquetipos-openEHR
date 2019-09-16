@@ -9,17 +9,17 @@ maior = int(input("Qual é o maior at? Exemplo: se for at0050, digite 50:"))
 tamanho = int(input("Tamanho do título principal (quanto maior o valor, menor o tamanho): "))
 tamanhoDaqui = 3
 bugados = []
+comecar = False
 
 while True:
     encontrado = False
-    contador = 0
     arquivoADL = open('adl.txt', 'r')
     for linha in arquivoADL:
-        contador += 1
-        if contador>20:
+        if linha == "definition\n":
+            comecar = True
+        if comecar == True:
             linha = linha.rstrip()
             arquivo = open('fakeADL.txt', 'a')
-
             if vez == 3:
                 linha = str(linha)
                 linha = linha.replace('text = <\"', '')
@@ -128,14 +128,14 @@ for linha in arquivoOrdem:
 arquivoOrdem.close()
 
 #Geração de HTML
-arquivoHTML = open('index.html','w')
+arquivoHTML = open('form.html','w')
 arquivoHTML.close()
 
 sectionOn=[0]
 entrada=0
 primeiraSection = 0
 
-arquivoHTML = open('index.html','a')
+arquivoHTML = open('form.html','a')
 arquivoHTML.write('<!DOCTYPE html>\n<html>\n<head>\n<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/form.css"/>\n</head>\n<body>\n<div class="container">\n<form class="ui form ui grid">\n')
 
 for c in range(0, len(tipo2)):
@@ -144,7 +144,7 @@ for c in range(0, len(tipo2)):
         while len(sectionOn) > 1:
             arquivoHTML.write('</fieldset>\n')
             del sectionOn[len(sectionOn) - 1]
-        arquivoHTML.write(f'<h{tamanho}>\n{texto2[c]}</h1>\n')
+        arquivoHTML.write(f'<h{tamanho}>\n{texto2[c]}</h{tamanho}>\n')
 
     if tipo2[c] == "SECTION\n":
         if sectionOn[len(sectionOn) - 1] == 0:
