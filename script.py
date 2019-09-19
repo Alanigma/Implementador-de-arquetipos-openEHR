@@ -232,7 +232,10 @@ for c in range(0, len(tipo2)):
 
         # if tipo2[c].split()[2] > tipo2[c].split()[1]:
         #     arquivoJS.write(f'function Function{id}() '+'{'+f'$("#id{id}").append(f\'<div class="field fifteen wide column">\n<label for="id{id}"><h{tamanhoDaqui + 1}>\n{texto2[c]}</h{tamanhoDaqui + 1}></label>\n\');'+'}')
-        arquivoElemento.write(f'<div class="field fifteen wide column">\n<label for="id{id}"><h{tamanhoDaqui + 1}>\n{texto2[c]}</h{tamanhoDaqui + 1}></label>\n')
+        arquivoElemento.write(f'<div class="field fifteen wide column" id="id{id}">\n')
+        idBotao=id
+        id+=1
+        arquivoElemento.write(f'<label for="id{id}"><h{tamanhoDaqui + 1}>\n{texto2[c]}</h{tamanhoDaqui + 1}></label>\n')
         for q in range(0, len(tipo2)):
             if tipo2[q].split()[0] == "DV_TEXT":
                 arquivoElemento.write(f'<input class="field eleven wide column" type="text" name="nome{nome}" id="id{id}">\n</div>\n')
@@ -310,23 +313,54 @@ for c in range(0, len(tipo2)):
                 arquivoElemento.write('</div>\n')
                 break
         arquivoElemento.close()
-        arquivoElemento = open('Elemento.html', 'r')
-        contadorID=0
+        linhaID=id
+        linhaNome=nome
+        contador=0
+        contadorNome=0
+
+        arquivoHTML.write(f'<div class="field fifteen wide column" id="id{id-2}">\n')
+        id += 1
+
         for vezes in range(int(tipo2[c].split()[1])):
+            arquivoElemento = open('Elemento.html', 'r')
             for linha in arquivoElemento:
-                for linhaID in range(id, -1):
+                if '<div' not in linha and '</div>' not in linha:
                     if f'id{linhaID}' in linha:
-                        linha = linha.replace(f'id{linhaID}', f'id{linhaID+contadorID}')
-                        contadorID += 1
-                        break
-                arquivoHTML.write(linha)
-        id += contadorID
+                        contador+=1
+                    if contador == 2:
+                        linhaID += 1
+                        contador = 0
+                    if f'id{linhaID-1}' in linha:
+                        linha = linha.replace(f'id{linhaID-1}', f'id{linhaID+vezes-1}')
+                    if f'nome{linhaNome}' in linha:
+                        contadorNome+=1
+                    if contadorNome == 2:
+                        linhaNome += 1
+                        contadorNome = 0
+                    if f'nome{linhaNome-1}' in linha:
+                        linha = linha.replace(f'nome{linhaNome-1}', f'nome{linhaNome+vezes-1}')
+                    arquivoHTML.write(linha)
+            arquivoElemento.close()
+            id=linhaID+vezes
+            nome=linhaNome+vezes
+        arquivoHTML.write('</div>\n')
+        arquivoElemento = open('Elemento.html', 'r')
+        if tipo2[c].split()[2] == "*" or tipo2[c].split()[2] > tipo2[c].split()[1]:
+            arquivoJS.write(f'function funcao{idBotao}()' + '{'+f'\n$("#id{idBotao}").append("')
+            for linha in arquivoElemento:
+                if '<div' not in linha and '</div>' not in linha:
+                    linha = linha.replace('\n',' ')
+                    linha = linha.replace(f'id{linhaID-1}', f'id{id}')
+                    arquivoJS.write(f'{linha}')
+            id += 1
+            arquivoJS.write('");\n}\n')
+            arquivoHTML.write(f'<button onclick="funcao{idBotao}">Adicionar {texto2[c]}</button>\n')
         arquivoElemento.close()
+        nome+=1
         arquivoJS.close()
-        nome += 1
 
 while len(sectionOn) > 1:
     arquivoHTML.write('</fieldset>\n')
     del sectionOn[len(sectionOn)-1]
-arquivoHTML.write('<button class="ui button" type="submit">Enviar</button>\n</form>\n</div>\n</body>\n</html>')
+arquivoHTML.write('<button type="submit">Enviar</button>\n</form>\n</div>\n</body>\n</html>')
 arquivoHTML.close()
