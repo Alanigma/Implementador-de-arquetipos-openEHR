@@ -179,6 +179,7 @@ primeiraSection = 0
 arquivoHTML = open('form.html','a')
 arquivoHTML.write('<!DOCTYPE html>\n<html>\n<head>\n<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/form.css"/>\n'
                   '<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>\n'
+                  '<script type="text/javascript" src="meuscript.js"></script>\n'
                   '</head>\n<body>\n<div class="container">\n<form class="ui form ui grid">\n')
 
 for c in range(0, len(tipo2)):
@@ -227,18 +228,20 @@ for c in range(0, len(tipo2)):
     if tipo2[c].split()[0] == "ELEMENT":
         arquivoElemento = open('Elemento.html', 'w')
         arquivoElemento.close()
+        arquivoElemento2 = open('Elemento2.html', 'w')
+        arquivoElemento2.close()
         arquivoJS = open('meuscript.js', 'a')
         arquivoElemento = open('Elemento.html', 'a')
-
-        # if tipo2[c].split()[2] > tipo2[c].split()[1]:
-        #     arquivoJS.write(f'function Function{id}() '+'{'+f'$("#id{id}").append(f\'<div class="field fifteen wide column">\n<label for="id{id}"><h{tamanhoDaqui + 1}>\n{texto2[c]}</h{tamanhoDaqui + 1}></label>\n\');'+'}')
+        arquivoElemento2 = open('Elemento2.html', 'a')
         arquivoElemento.write(f'<div class="field fifteen wide column" id="id{id}">\n')
         idBotao=id
         id+=1
         arquivoElemento.write(f'<label for="id{id}"><h{tamanhoDaqui + 1}>\n{texto2[c]}</h{tamanhoDaqui + 1}></label>\n')
+        arquivoElemento2.write(f'<label for="id\'+id+\'"><h{tamanhoDaqui + 1}>\n{texto2[c]}</h{tamanhoDaqui + 1}></label>\n')
         for q in range(0, len(tipo2)):
             if tipo2[q].split()[0] == "DV_TEXT":
                 arquivoElemento.write(f'<input class="field eleven wide column" type="text" name="nome{nome}" id="id{id}">\n</div>\n')
+                arquivoElemento2.write(f'<input class="field eleven wide column" type="text" name="nome\'+nome+\'" id="id\'+id+\'">\n</div>\n')
                 id+=1
                 espacos2[q] = 0
                 tipo2[q] = "vazio"
@@ -246,6 +249,7 @@ for c in range(0, len(tipo2)):
                 break
             if tipo2[q].split()[0] == "DV_DATE_TIME":
                 arquivoElemento.write(f'<input class="field eleven wide column" type="datetime-local" name="nome{nome}" id="id{id}"/>\n</div>\n')
+                arquivoElemento2.write(f'<input class="field eleven wide column" type="datetime-local" name="nome\'+nome+\'" id="id\'+id+\'"/>\n</div>\n')
                 id+=1
                 espacos2[q] = 0
                 tipo2[q] = "vazio"
@@ -253,6 +257,7 @@ for c in range(0, len(tipo2)):
                 break
             if tipo2[q].split()[0] == "DV_DATE":
                 arquivoElemento.write(f'<input class="field eleven wide column" type="date" name="nome{nome}" id="id{id}"/>\n</div>\n')
+                arquivoElemento2.write(f'<input class="field eleven wide column" type="date" name="nome\'+nome+\'" id="id\'+id+\'"/>\n</div>\n')
                 id+=1
                 espacos2[q] = 0
                 tipo2[q] = "vazio"
@@ -260,6 +265,7 @@ for c in range(0, len(tipo2)):
                 break
             if tipo2[q].split()[0] == "DV_BOOLEAN":
                 arquivoElemento.write(f'<input type="checkbox" value="1" name="nome{nome}" id="id{id}"/>\n</div>\n')
+                arquivoElemento2.write(f'<input type="checkbox" value="1" name="nome\'+nome+\'" id="id\'+id+\'"/>\n</div>\n')
                 id+=1
                 espacos2[q] = 0
                 tipo2[q] = "vazio"
@@ -267,6 +273,7 @@ for c in range(0, len(tipo2)):
                 break
             if tipo2[q].split()[0] == "DV_MULTIMEDIA":
                 arquivoElemento.write(f'<input class="field eleven wide column" type="file" name="nome{nome}" id="id{id}"/>\n</div>\n')
+                arquivoElemento2.write(f'<input class="field eleven wide column" type="file" name="nome\'+nome+\'" id="id\'+id+\'"/>\n</div>\n')
                 id+=1
                 espacos2[q] = 0
                 tipo2[q] = "vazio"
@@ -274,6 +281,7 @@ for c in range(0, len(tipo2)):
                 break
             if tipo2[q].split()[0] == "DV_TIME":
                 arquivoElemento.write(f'<input class="field eleven wide column" type="time" name="nome{nome}" id="id{id}"/>\n</div>\n')
+                arquivoElemento2.write(f'<input class="field eleven wide column" type="time" name="nome\'+nome+\'" id="id\'+id+\'"/>\n</div>\n')
                 id+=1
                 espacos2[q] = 0
                 tipo2[q] = "vazio"
@@ -281,6 +289,7 @@ for c in range(0, len(tipo2)):
                 break
             if tipo2[q].split()[0] == "DV_DURATION" or tipo2[q] == "DV_QUANTITY":
                 arquivoElemento.write(f'<input class="field eleven wide column" class="field eleven wide column" type="number" name="nome{nome}" id="id{id}"/>\n</div>\n')
+                arquivoElemento2.write(f'<input class="field eleven wide column" class="field eleven wide column" type="number" name="nome\'+nome+\'" id="id\'+id+\'"/>\n</div>\n')
                 id+=1
                 espacos2[q] = 0
                 tipo2[q] = "vazio"
@@ -292,27 +301,35 @@ for c in range(0, len(tipo2)):
                 texto2[q] = "vazio"
                 for q2 in range(0, 11):
                     arquivoElemento.write('<div class="ui radio checkbox">\n')
+                    arquivoElemento2.write('<div class="ui radio checkbox">\n')
                     arquivoElemento.write(f'<input class="field eleven wide column" type="radio" value="{q2}" name="nome{nome}" id="id{id}"/>\n<label for="id{id}">\n{q2}</label>\n</div>\n')
+                    arquivoElemento2.write(f'<input class="field eleven wide column" type="radio" value="{q2}" name="nome\'+nome+\'" id="id\'+id+\'"/>\n<label for="id\'+id+\'">\n{q2}</label>\n</div>\n')
                     id += 1
                 break
             if tipo2[q].split()[0] == "DV_CODED_TEXT":
                 arquivoElemento.write(f'<select id="id{id}">\n')
+                arquivoElemento2.write(f'<select id="id\'+id+\'">\n')
                 id+=1
                 arquivoElemento.write(f'<option value=""></option>\n')
+                arquivoElemento2.write(f'<option value=""></option>\n')
                 espacos2[q] = 0
                 tipo2[q] = "vazio"
                 texto2[q] = "vazio"
                 for q2 in range(q + 1, len(tipo2)):
                     if tipo2[q2].split()[0] == "CODE_PHRASE":
                          arquivoElemento.write(f'<option value="{texto2[q2]}">{texto2[q2]}</option>\n')
+                         arquivoElemento2.write(f'<option value="{texto2[q2]}">{texto2[q2]}</option>\n')
                          espacos2[q2] = 0
                          tipo2[q2] = "vazio"
                          texto2[q2] = "vazio"
                     else: break
                 arquivoElemento.write('</select>\n')
                 arquivoElemento.write('</div>\n')
+                arquivoElemento2.write('</select>\n')
+                arquivoElemento2.write('</div>\n')
                 break
         arquivoElemento.close()
+        arquivoElemento2.close()
         linhaID=id
         linhaNome=nome
         contador=0
@@ -344,23 +361,24 @@ for c in range(0, len(tipo2)):
             id=linhaID+vezes
             nome=linhaNome+vezes
         arquivoHTML.write('</div>\n')
-        arquivoElemento = open('Elemento.html', 'r')
+        arquivoElemento2 = open('Elemento2.html', 'r')
         if tipo2[c].split()[2] == "*" or tipo2[c].split()[2] > tipo2[c].split()[1]:
-            arquivoJS.write(f'function funcao{idBotao}()' + '{'+f'\n$("#id{idBotao}").append("')
-            for linha in arquivoElemento:
+            arquivoJS.write(f'function funcao{idBotao}()' + '{'+f'\n$("#id{idBotao}").append(\'')
+            for linha in arquivoElemento2:
                 if '<div' not in linha and '</div>' not in linha:
                     linha = linha.replace('\n',' ')
-                    linha = linha.replace(f'id{linhaID-1}', f'id{id}')
                     arquivoJS.write(f'{linha}')
-            id += 1
-            arquivoJS.write('");\n}\n')
-            arquivoHTML.write(f'<button onclick="funcao{idBotao}">Adicionar {texto2[c]}</button>\n')
-        arquivoElemento.close()
+            arquivoJS.write('\');\nid+=1\nnome+=1\n}\n')
+            arquivoHTML.write(f'<a style="color:white;background-color:grey;padding:3px" onclick="funcao{idBotao}()">Adicionar {texto2[c]}</a>\n')
+        arquivoElemento2.close()
         nome+=1
         arquivoJS.close()
 
 while len(sectionOn) > 1:
     arquivoHTML.write('</fieldset>\n')
     del sectionOn[len(sectionOn)-1]
+arquivoJS = open('meuscript.js', 'a')
+arquivoJS.write(f'id={id}\nnome={nome}\n')
+arquivoJS.close()
 arquivoHTML.write('<button type="submit">Enviar</button>\n</form>\n</div>\n</body>\n</html>')
 arquivoHTML.close()
